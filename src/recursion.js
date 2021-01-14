@@ -7,31 +7,117 @@
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
 var factorial = function(n) {
+  if (n < 0) {
+    return null;
+  }
+  if (n === 0) {
+    return 1;
+  }
+  return n * factorial(n-1);
 };
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
+  var wrkArray = array.slice();
+  if (wrkArray.length === 0) {
+    return 0;
+  }
+  if (wrkArray.length === 1) {
+    return wrkArray[0];
+  }
+  var firstVal = wrkArray.shift();
+  return firstVal + sum(wrkArray);
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+  var wrkArray = array.slice();
+  wrkArray = flatten(wrkArray);
+
+  if (wrkArray.length === 0) {
+    return 0;
+  }
+  if (wrkArray.length === 1) {
+    return wrkArray[0];
+  }
+  var firstVal = wrkArray.shift();
+  return firstVal + arraySum(wrkArray);
+
 };
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+  n = Math.abs(n);
+  if (n === 0) {
+    return true;
+  }
+
+  if (n === 1) {
+    return false;
+  }
+  return isEven(n - 2);
 };
+
+
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
+
+  var val = Math.abs(n);
+
+  if (n === 0 || n === 1) {
+    return 0;
+  }
+  val = val - 1 + sumBelow(val-1);
+  if (n < 0){
+    val = -1 * val;
+  }
+  return val;
+
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
+  var res = [];
+
+  if (x === y) {
+    return res;
+  }
+
+  if (y > x) {
+    var lower = x;
+    var upper = y;
+  } else {
+    var lower = y;
+    var upper = x;
+  }
+
+  lower = lower + 1;
+  if (upper === lower) {
+    return res;
+  }
+
+  res.push(lower);
+  res = res.concat(range(lower, upper));
+
+  var repaired = [];
+
+  if (x > y) {
+    for (var i = (res.length -1); i > -1; i--) {
+      var val = res[i];
+      repaired.push(val);
+    }
+  } else {
+    repaired = res;
+  }
+
+  return repaired;
+
 };
 
 // 7. Compute the exponent of a number.
@@ -47,14 +133,42 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+
+  if (n === 1 || n === 2) {
+    return true;
+  }
+
+  if (n < 1) {
+    return false;
+  }
+  var val = n;
+  val = val / 2;
+  return powerOfTwo(val);
+
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+  if (string === '') // This is the terminal case that will end the recursion
+    return '';
+
+  else
+    return reverse(string.substr(1)) + string.charAt(0);
+
 };
 
 // 10. Write a function that determines if a string is a palindrome.
+
+//***this is unfinished, and doesn't use recursion***
+
 var palindrome = function(string) {
+  var reversed = reverse(string);
+  if (reversed === string) {
+    return true;
+  } else {
+    return false;
+  }
+
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -136,11 +250,13 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
+
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
+
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
@@ -185,6 +301,16 @@ var nestedEvenSum = function(obj) {
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
 var flatten = function(array) {
+  var ret = [];
+    for(var i = 0; i < array.length; i++) {
+        if(Array.isArray(array[i])) {
+            ret = ret.concat(flatten(array[i]));
+        } else {
+            ret.push(array[i]);
+        }
+    }
+    return ret;
+
 };
 
 // 31. Given a string, return an object containing tallies of each letter.
